@@ -30,10 +30,10 @@ class MainViewModel : ViewModel() {
         when (stateEvent) {
 
             is GetBlogPostEvent -> {
-                return object:LiveData<MainViewState>(){
+                return object : LiveData<MainViewState>() {
                     override fun onActive() {
                         super.onActive()
-                        val blogList:ArrayList<BlogPost> =ArrayList()
+                        val blogList: ArrayList<BlogPost> = ArrayList()
                         blogList.add(
                             BlogPost(
                                 pk = 0,
@@ -50,7 +50,7 @@ class MainViewModel : ViewModel() {
                                 image = "https://cdn.open-api.xyz/open-api-static/static-blog-images/image2.jpg"
                             )
                         )
-                        value= MainViewState(
+                        value = MainViewState(
                             blogList
                         )
 
@@ -61,13 +61,13 @@ class MainViewModel : ViewModel() {
                 return object : LiveData<MainViewState>() {
                     override fun onActive() {
                         super.onActive()
-                        val user=User(
+                        val user = User(
                             email = "mitch@tabian.ca",
                             username = "mitch",
                             image = "https://cdn.open-api.xyz/open-api-static/static-random-images/logo_1080_1080.png"
                         )
-                        value=MainViewState(
-                            user=user
+                        value = MainViewState(
+                            user = user
                         )
                     }
                 }
@@ -78,23 +78,27 @@ class MainViewModel : ViewModel() {
             }
         }
     }
-    private fun getCurrentViewStateOrNew():MainViewState{
+
+    private fun getCurrentViewStateOrNew(): MainViewState {
         return viewState.value?.let {
             it
-        }?: MainViewState()
+        } ?: MainViewState()
     }
-    fun setBlogListData(blogPosts:List<BlogPost>){
-        val update=getCurrentViewStateOrNew()
-        update.blogPost=blogPosts
-        _viewState.value=update
+
+    fun setBlogListData(blogPosts: List<BlogPost>) {
+        val update = getCurrentViewStateOrNew()
+        update.blogPost = blogPosts
+        _viewState.value = update
     }
-    fun setUserData(user: User){
-        val update=getCurrentViewStateOrNew()
-        update.user=user
-        _viewState.value=update
+
+    fun setUserData(user: User) {
+        val update = getCurrentViewStateOrNew()
+        update.user = user
+        _viewState.value = update
     }
-    fun setStateEvent(event:MainStateEvent){
-        _stateEvent.value=event
+
+    fun setStateEvent(event: MainStateEvent) {
+        _stateEvent.value = event
     }
 
 
