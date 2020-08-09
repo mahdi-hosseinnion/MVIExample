@@ -1,16 +1,23 @@
 package com.example.mviexample.ui.main
 
+import android.content.Context
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.mviexample.R
+import com.example.mviexample.ui.DataStateListener
 import com.example.mviexample.ui.main.state.MainStateEvent
 import com.example.mviexample.ui.main.state.MainViewState
+import java.lang.ClassCastException
 
 class MainFragment : Fragment() {
+    //var
     lateinit var viewModel: MainViewModel
+    lateinit var dataStateHandler:DataStateListener
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -31,6 +38,8 @@ class MainFragment : Fragment() {
     private fun subscribeObservers() {
         viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
             println("DEBUG: DataState: $dataState")
+            //handle loading and error
+            dataStateHandler.onDataStateChange(dataState)
             //handle data<T>
             dataState.data?.let { MainViewState ->
                 MainViewState.blogPost?.let {
@@ -41,14 +50,6 @@ class MainFragment : Fragment() {
                     //set User Data
                     viewModel.setUserData(it)
                 }
-            }
-            //handle loading
-            dataState.loading.let {
-
-            }
-            //handle error
-            dataState.message?.let {
-
             }
         })
         viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
@@ -82,5 +83,12 @@ class MainFragment : Fragment() {
         viewModel.setStateEvent(MainStateEvent.GetUserEvent("1"))
     }
 
-
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        try {
+            dataStateHandler=context as DataStateListener
+        }catch (e :ClassCastException){
+            println("DEBUG: $context must implement DataStateListener")
+        }
+    }
 }
