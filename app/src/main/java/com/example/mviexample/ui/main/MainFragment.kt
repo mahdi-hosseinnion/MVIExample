@@ -15,7 +15,7 @@ import java.lang.ClassCastException
 class MainFragment : Fragment() {
     //var
     lateinit var viewModel: MainViewModel
-    lateinit var dataStateHandler:DataStateListener
+    lateinit var dataStateHandler: DataStateListener
 
 
     override fun onCreateView(
@@ -41,14 +41,16 @@ class MainFragment : Fragment() {
             //handle loading and error
             dataStateHandler.onDataStateChange(dataState)
             //handle data<T>
-            dataState.data?.let { MainViewState ->
-                MainViewState.blogPost?.let {
-                    //set BlogPost Data
-                    viewModel.setBlogListData(it)
-                }
-                MainViewState.user?.let {
-                    //set User Data
-                    viewModel.setUserData(it)
+            dataState.data?.let { event ->
+                event.getContentIfNotHandled()?.let { mainViewState ->
+                    mainViewState.blogPost?.let {
+                        //set BlogPost Data
+                        viewModel.setBlogListData(it)
+                    }
+                    mainViewState.user?.let {
+                        //set User Data
+                        viewModel.setUserData(it)
+                    }
                 }
             }
         })
@@ -86,8 +88,8 @@ class MainFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         try {
-            dataStateHandler=context as DataStateListener
-        }catch (e :ClassCastException){
+            dataStateHandler = context as DataStateListener
+        } catch (e: ClassCastException) {
             println("DEBUG: $context must implement DataStateListener")
         }
     }
