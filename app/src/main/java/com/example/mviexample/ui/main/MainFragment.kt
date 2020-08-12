@@ -7,8 +7,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.example.mviexample.R
 import com.example.mviexample.model.BlogPost
+import com.example.mviexample.model.User
 import com.example.mviexample.ui.DataStateListener
 import com.example.mviexample.ui.main.state.MainStateEvent
 import com.example.mviexample.ui.main.state.MainViewState
@@ -77,8 +79,19 @@ class MainFragment : Fragment() ,
             }
             viewState.user?.let {
                 println("DEBUG: Setting User Data: $it")
+                setUserProperties(it)
             }
         })
+    }
+
+    private fun setUserProperties(user:User){
+        email.text = user.email
+        username.text = user.username
+        view?.let {
+            Glide.with(it.context)
+                .load(user.image)
+                .into(image)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
